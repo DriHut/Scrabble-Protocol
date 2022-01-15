@@ -21,7 +21,7 @@ public class ProtocolMessages {
 	 * server and client to distinguish messages.
 	 */
 	
-	/** <b> Usage:</b> "c" */
+	/** <b> Usage:</b> "c;[player_name]", <b> Example:</b> "c;PlayerA" */
 	public static final String CONNECT = "c";
 	
 	/** <b> Usage:</b> "cc" */

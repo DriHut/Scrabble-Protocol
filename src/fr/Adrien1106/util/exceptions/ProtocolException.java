@@ -1,4 +1,4 @@
-package fr.Adrien1106.util.execptions;
+package fr.Adrien1106.util.exceptions;
 
 public class ProtocolException extends Exception {
 
