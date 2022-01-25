@@ -3,7 +3,7 @@ package fr.Adrien1106.util.exceptions;
 public class TooManyPlayersException extends ProtocolException {
 
 	public TooManyPlayersException(int amount, int max) {
-		super(amount + " is more than the maximum amount of players: " + max);
+		super("E010",amount + " is more than the maximum amount of players: " + max);
 	}
 
 	private static final long serialVersionUID = -8878960125315097073L;

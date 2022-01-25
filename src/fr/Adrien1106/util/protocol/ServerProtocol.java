@@ -1,15 +1,9 @@
 package fr.Adrien1106.util.protocol;
 
-import fr.Adrien1106.util.exceptions.InvalidNameException;
-import fr.Adrien1106.util.exceptions.NotOwnedTileException;
-import fr.Adrien1106.util.exceptions.NotTurnException;
-import fr.Adrien1106.util.exceptions.RoomFullException;
-import fr.Adrien1106.util.exceptions.TooFewPlayersException;
-import fr.Adrien1106.util.exceptions.TooManyPlayersException;
-import fr.Adrien1106.util.exceptions.UnknownRoomException;
-import fr.Adrien1106.util.exceptions.UnknownTileException;
-import fr.Adrien1106.util.exceptions.WordOutOfBoundsException;
-import fr.Adrien1106.util.exceptions.WrongCoordinateException;
+import java.net.Socket;
+
+import fr.Adrien1106.util.exceptions.*;
+import fr.Adrien1106.util.interfaces.*;
 
 /**
  * Defines the methods that the scrabble Server should support. The results 
@@ -17,56 +11,62 @@ import fr.Adrien1106.util.exceptions.WrongCoordinateException;
  * @author Adrien1106
  */
 public interface ServerProtocol {
-
-	/**
-	 * Called when new connection is established
-	 * @return a feedback message to confirm the connection
-	 */
-	public String doConnect(String player_name) throws InvalidNameException;
 	
 	/**
-	 * Called when a player request to join a room
-	 * @param room_id
-	 * @return an initialization of the room (table, players that are already in the game);
+	 * Called when new connection is established
+	 * @ensures it create a new ClientHandler
 	 */
-	public String doJoinRoom(String room_id) throws UnknownRoomException, RoomFullException;
+	public void register(String client_id, Socket socket);
 	
 	/**
 	 * Called when a new room is being created
+	 * @throws TooManyPlayersException
+	 * @throws TooFewPlayersException
 	 * @return a room id that the person just created
 	 */
 	public String doCreateRoom(String player_number) throws TooManyPlayersException, TooFewPlayersException;
 	
 	/**
-	 * Called when a game starts
-	 * @return the table info, player_list with their associated numbers
+	 * Sends
+	 * @send the table info, player_list with their associated client ids
+	 * @ensures it is synchronized
 	 */
-	public String start();
+	public void doStart(IRoom room);
+
+	/**
+	 * Sends an information when a players join a room to all the players
+	 * @param room
+	 * @param identifier - player name and client id
+	 * @send a player identifier
+	 * @ensures it is synchronized
+	 */
+	public void doJoin(IRoom room, String identifier);
 	
 	/**
-	 * Called when a player tries a move
-	 * @param alignment
-	 * @param coordinates
-	 * @param word
-	 * @return if move has been accepted
+	 * Sends a score update to all the players
+	 * @param room
+	 * @param info - the player identifier and the score
+	 * @sends the info to all the players
+	 * @ensures it is synchronized
 	 */
-	public String doMove(String alignment, String coordinates, String word) throws NotOwnedTileException, NotTurnException, WordOutOfBoundsException, UnknownTileException, WrongCoordinateException;
+	public void doUpdateScore(IRoom room, String info);
 	
 	/**
-	 * Called when a player want to skip his turn
-	 * @return if skipping is accepted
+	 * Sends a table update to all the players
+	 * @param room
+	 * @param table - the table string representation
+	 * @sends the table to all the players
+	 * @ensures it is synchronized
 	 */
-	public String doSkip();
-	
+	public void doUpdateTable(IRoom room, String table);
+
 	/**
-	 * Called when a player want to replace some tiles
-	 * @param tiles - tiles to be replaced
-	 * @return new tiles to be sent to the client
+	 * Called when a game ends
+	 * @param room
+	 * @param best_player the best player id
+	 * @param score the best score
+	 * @sends information about the ended game
+	 * @ensures it is synchronized
 	 */
-	public String doReplaceTiles(String tiles) throws UnknownTileException;
-	
-	/**
-	 * Called when a player disconnects from the server
-	 */
-	public void doDisconnect();
+	public void doFinish(IRoom room, String best_player, int score);
 }
