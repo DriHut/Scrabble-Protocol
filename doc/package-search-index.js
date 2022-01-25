@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"fr.Adrien1106.util.exceptions"},{"l":"fr.Adrien1106.util.protocol"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"fr.Adrien1106.util.exceptions"},{"l":"fr.Adrien1106.util.interfaces"},{"l":"fr.Adrien1106.util.protocol"}];updateSearchResults();
